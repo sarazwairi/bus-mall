@@ -1,0 +1,94 @@
+*{
+    background-origin: border-box;
+}
+html{
+    width: 100%;
+    text-align: center;
+    background-color: gray;
+    color: white;
+}
+header{
+    font-size: xx-large;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: teal;
+    color: black;
+}
+.main{
+    clear:both;
+    top:150px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.secondCol{
+    float:left;
+    width:60%;
+    padding: 5px;
+}
+.resultCol{
+    float: right;
+    width: 40%;
+}
+.products{
+    margin-bottom: 50px;
+    height: 50%;
+    margin-top: 50px;
+}
+#leftImageElement{
+    margin-top: 50px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid goldenrod;
+    border-radius: 10px;
+    width: 195px;
+    height: 150px;
+}
+#middleImageElement{
+    margin-top: 50px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid goldenrod;
+    border-radius: 10px;
+    width: 195px;
+    height: 150px;
+}
+#rightImageElement{
+    margin-top: 50px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid goldenrod;
+    border-radius: 10px;
+    width: 195px;
+    height: 150px;
+}
+.text{
+    clear: both;
+    top:100px;
+    background-color: gray;
+}
+.text p{
+    clear:both;
+    margin-left: 5px;
+    margin-right: 5px;
+    position: relative;
+    text-align: left;
+    font-size: large;
+}
+button{
+    color: palevioletred;
+    font-size: large;
+    margin: 2rem 0.5rem;
+}
+button:hover{
+    background-color: rebeccapurple;
+}
+ul li{
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: medium;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: double goldenrod;
+    padding: 5px;
+}
