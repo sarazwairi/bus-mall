@@ -15,11 +15,9 @@ let resultDiv = document.getElementsByClassName('resultsCol')[0];
 let resultList = document.createElement('ul');
 button.hidden = true;
 let previousImages = [];
-
 let productVotes = [];
 let productOccurrence = [];
 let productNames = [];
-
 
 
 let imgArry = [
@@ -93,6 +91,7 @@ renderThreeImages();
 
 function chartRendering() {
   let ctx = document.getElementById('dataChart').getContext('2d');
+  // eslint-disable-next-line no-unused-vars
   let dataChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -129,6 +128,7 @@ function chartRendering() {
 
 container.addEventListener('click', handleUserClick);
 
+// eslint-disable-next-line no-unused-vars
 function viewResults(event) {
   button.hidden = true;
   resultDiv.appendChild(resultList);
