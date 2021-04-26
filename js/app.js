@@ -1,19 +1,26 @@
 'use strict';
 
-let productsArray=[];
-let leftImageElement=document.getElementById('leftImageElement');
-let middleImageElement=document.getElementById('middleImageElement');
-let rightImageElement=document.getElementById('rightImageElement');
-let container=document.getElementsByClassName('produts')[0];
+let productsArray = [];
+let leftImageElement = document.getElementById('leftImageElement');
+let middleImageElement = document.getElementById('middleImageElement');
+let rightImageElement = document.getElementById('rightImageElement');
+let container = document.getElementsByClassName('produts')[0];
 let leftImageIndex;
 let middleImageIndex;
 let rightImageIndex;
-let maxAttempts=25;
-let userAttemptCounter=0;
-let button=document.createElement('button');
-let resultDiv=document.getElementsByClassName('resultsCol')[0];
-let resultList=document.createElement('ul');
-button.hidden=true;
+let maxAttempts = 25;
+let userAttemptCounter = 0;
+let button = document.createElement('button');
+let resultDiv = document.getElementsByClassName('resultsCol')[0];
+let resultList = document.createElement('ul');
+button.hidden = true;
+let previousImages = [];
+
+let productVotes = [];
+let productOccurrence = [];
+let productNames = [];
+
+
 
 let imgArry = [
   'bag',
@@ -38,76 +45,127 @@ let imgArry = [
   'wine-glass'
 ];
 
-function Products(name){
-  this.name=name;
+function Products(name) {
+  this.name = name;
 
-  if(this.name==='sweep.png'||this.name==='usb.gif'){
-    this.img=`./img/${name}`;
-  }else{this.img=`./img/${name}.jpg`;}
+  if (this.name === 'sweep.png' || this.name === 'usb.gif') {
+    this.img = `./img/${name}`;
+  } else { this.img = `./img/${name}.jpg`; }
 
-  this.occurrence=0;
-  this.votes=0;
+  this.occurrence = 0;
+  this.votes = 0;
   productsArray.push(this);
 }
 
 
-for(let i=0;i<imgArry.length;i++){
+for (let i = 0; i < imgArry.length; i++) {
   new Products(imgArry[i]);
 }
-function generateRandomIndex(){
-  return Math.floor(Math.random()*productsArray.length);
+function generateRandomIndex() {
+  return Math.floor(Math.random() * productsArray.length);
 }
 
-function renderThreeImages(){
-  leftImageIndex=generateRandomIndex(0,imgArry.length-1);
-  do{
-    middleImageIndex=generateRandomIndex(0,imgArry.length-1);
+function renderThreeImages() {
+  do {
+    leftImageIndex = generateRandomIndex(0, imgArry.length - 1);
   }
-  while(middleImageIndex===leftImageIndex);
-  do{rightImageIndex=generateRandomIndex(0,imgArry.length-1);
+  while (previousImages.includes(leftImageIndex));
+  do {
+    middleImageIndex = generateRandomIndex(0, imgArry.length - 1);
   }
-  while(rightImageIndex===leftImageIndex||rightImageIndex===middleImageIndex);
+  while (middleImageIndex === leftImageIndex || previousImages.includes(middleImageIndex));
+  do {
+    rightImageIndex = generateRandomIndex(0, imgArry.length - 1);
+  } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex || previousImages.includes(rightImageIndex));
 
-  leftImageElement.src=productsArray[leftImageIndex].img;
+  previousImages = [rightImageIndex, middleImageIndex, leftImageIndex];
+
+  leftImageElement.src = productsArray[leftImageIndex].img;
   productsArray[leftImageIndex].occurrence++;
 
-  middleImageElement.src=productsArray[middleImageIndex].img;
+  middleImageElement.src = productsArray[middleImageIndex].img;
   productsArray[middleImageIndex].occurrence++;
 
-  rightImageElement.src=productsArray[rightImageIndex].img;
+  rightImageElement.src = productsArray[rightImageIndex].img;
   productsArray[rightImageIndex].occurrence++;
 }
 renderThreeImages();
 
-container.addEventListener('click',handleUserClick);
+function chartRendering() {
+  let ctx = document.getElementById('dataChart').getContext('2d');
+  let dataChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels:productNames,
+      datasets: [{
+        label:'selected' ,
+        data:productVotes,
+        backgroundColor:
+          '#daa520',
+        borderColor:
+          '#daa520',
+        borderWidth: 1,
+      }, {
+        label: 'shown',
+        data: productOccurrence,
+        backgroundColor:
+          'rgba(28,158,61)',
+        borderColor:
+          'rgba(28,158,61)',
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
 
-function viewResults(event){
-  button.hidden=true;
+}
+
+
+container.addEventListener('click', handleUserClick);
+
+function viewResults(event) {
+  button.hidden = true;
   console.log(event.target.value);
   resultDiv.appendChild(resultList);
   let listItem;
-  for(let i=0;i<productsArray.length;i++){
-    listItem=document.createElement('li');
-    listItem.textContent=`${productsArray[i].name} had ${productsArray[i].votes} votes,and was seen ${productsArray[i].occurrence} TimeRanges.`;
+  for (let i = 0; i < productsArray.length; i++) {
+    listItem = document.createElement('li');
+    listItem.textContent = `${productsArray[i].name} had ${productsArray[i].votes} votes,and was seen ${productsArray[i].occurrence} TimeRanges.`;
     resultList.appendChild(listItem);
+    productVotes.push(productsArray[i].votes);
+    productOccurrence.push(productsArray[i].occurrence);
+    productNames.push(productsArray[i].name);
   }
 }
 
-function handleUserClick(event){
+function handleUserClick(event) {
   userAttemptCounter++;
-  if(userAttemptCounter<=maxAttempts){
-    if(event.target.id==='leftImageElement'){
+  if (userAttemptCounter <= maxAttempts) {
+    if (event.target.id === 'leftImageElement') {
       productsArray[leftImageIndex].votes++;
-    }else if(event.target.id==='middleImageElement'){
+    } else if (event.target.id === 'middleImageElement') {
       productsArray[middleImageIndex].votes++;
-    }else{productsArray[rightImageIndex].votes++;
+    } else {
+      productsArray[rightImageIndex].votes++;
     }
     renderThreeImages();
-  }else{
-    button.hidden=false;
+  } else {
+    container.removeEventListener('click', handleUserClick);
+    for(let i=0;i<productsArray.length;i++){
+      productVotes.push(productsArray[i].votes);
+      productOccurrence.push(productsArray[i].occurrence);
+      productNames.push(productsArray[i].name);
+    }
+    chartRendering();
+    button.hidden = false;
     resultDiv.appendChild(button);
-    button.textContent='View Results';
-    button.addEventListener('click',viewResults);
-    container.removeEventListener('click',handleUserClick);
+    button.textContent = 'View Results';
+    button.addEventListener('click', viewResults);
   }
 }
