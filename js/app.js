@@ -15,11 +15,9 @@ let resultDiv = document.getElementsByClassName('resultsCol')[0];
 let resultList = document.createElement('ul');
 button.hidden = true;
 let previousImages = [];
-
 let productVotes = [];
 let productOccurrence = [];
 let productNames = [];
-
 
 
 let imgArry = [
@@ -73,10 +71,10 @@ function renderThreeImages() {
   do {
     middleImageIndex = generateRandomIndex(0, imgArry.length - 1);
   }
-  while (middleImageIndex === leftImageIndex || previousImages.includes(middleImageIndex));
+  while ((middleImageIndex === leftImageIndex )|| previousImages.includes(middleImageIndex));
   do {
     rightImageIndex = generateRandomIndex(0, imgArry.length - 1);
-  } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex || previousImages.includes(rightImageIndex));
+  } while ((rightImageIndex === leftImageIndex )|| (rightImageIndex === middleImageIndex) || previousImages.includes(rightImageIndex));
 
   previousImages = [rightImageIndex, middleImageIndex, leftImageIndex];
 
@@ -93,6 +91,7 @@ renderThreeImages();
 
 function chartRendering() {
   let ctx = document.getElementById('dataChart').getContext('2d');
+  // eslint-disable-next-line no-unused-vars
   let dataChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -129,9 +128,9 @@ function chartRendering() {
 
 container.addEventListener('click', handleUserClick);
 
+// eslint-disable-next-line no-unused-vars
 function viewResults(event) {
   button.hidden = true;
-  console.log(event.target.value);
   resultDiv.appendChild(resultList);
   let listItem;
   for (let i = 0; i < productsArray.length; i++) {
