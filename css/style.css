@@ -4,8 +4,8 @@
 html{
     width: 100%;
     text-align: center;
-    background-color: gray;
-    color: white;
+    background-color: rgb(221, 218, 218);
+    color:black;
 }
 header{
     font-size: xx-large;
@@ -91,4 +91,9 @@ ul li{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     border: double goldenrod;
     padding: 5px;
+}
+#dataChart{
+    top: 200px;
+    left: 5px;
+    padding: 10px;
 }

@@ -16,6 +16,10 @@ let resultList = document.createElement('ul');
 button.hidden = true;
 let previousImages = [];
 
+let productVotes = [];
+let productOccurrence = [];
+let productNames = [];
+
 
 
 let imgArry = [
@@ -88,36 +92,26 @@ function renderThreeImages() {
 renderThreeImages();
 
 function chartRendering() {
-
-  let votes = [];
-  let occurrence = [];
-  let name = [];
-
-  for (let i = 0; i < productsArray.length; i++) {
-    name.push(productsArray[i].name);
-    occurrence.push(productsArray[i].occurrence);
-    votes.push(productsArray[i].votes);
-  }
   let ctx = document.getElementById('dataChart').getContext('2d');
   let dataChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: name,
+      labels:productNames,
       datasets: [{
-        label: '# of Votes',
-        data:votes,
+        label:'selected' ,
+        data:productVotes,
         backgroundColor:
-          'rgba(255, 99, 132, 0.2)',
+          '#daa520',
         borderColor:
-          'rgba(255, 99, 132, 1)',
+          '#daa520',
         borderWidth: 1,
       }, {
-        label: '# of shown',
-        data: occurrence,
+        label: 'shown',
+        data: productOccurrence,
         backgroundColor:
-          'rgba(144, 99, 100, 0.2)',
+          'rgba(28,158,61)',
         borderColor:
-          'rgba(144, 99, 100, 1)',
+          'rgba(28,158,61)',
         borderWidth: 1,
       }]
     },
@@ -131,7 +125,7 @@ function chartRendering() {
   });
 
 }
-chartRendering();
+
 
 container.addEventListener('click', handleUserClick);
 
@@ -144,6 +138,9 @@ function viewResults(event) {
     listItem = document.createElement('li');
     listItem.textContent = `${productsArray[i].name} had ${productsArray[i].votes} votes,and was seen ${productsArray[i].occurrence} TimeRanges.`;
     resultList.appendChild(listItem);
+    productVotes.push(productsArray[i].votes);
+    productOccurrence.push(productsArray[i].occurrence);
+    productNames.push(productsArray[i].name);
   }
 }
 
@@ -159,10 +156,16 @@ function handleUserClick(event) {
     }
     renderThreeImages();
   } else {
+    container.removeEventListener('click', handleUserClick);
+    for(let i=0;i<productsArray.length;i++){
+      productVotes.push(productsArray[i].votes);
+      productOccurrence.push(productsArray[i].occurrence);
+      productNames.push(productsArray[i].name);
+    }
+    chartRendering();
     button.hidden = false;
     resultDiv.appendChild(button);
     button.textContent = 'View Results';
     button.addEventListener('click', viewResults);
-    container.removeEventListener('click', handleUserClick);
   }
 }
