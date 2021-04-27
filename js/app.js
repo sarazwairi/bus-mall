@@ -55,10 +55,25 @@ function Products(name) {
   productsArray.push(this);
 }
 
-
 for (let i = 0; i < imgArry.length; i++) {
   new Products(imgArry[i]);
 }
+//lab13
+function getProducts(){
+  let proStringObj=localStorage.getItem('products');
+  let proObj=JSON.parse(proStringObj);
+
+  if(proObj){
+    for(let i=0;i<proObj.length;i++){
+      productsArray=proObj;
+    }
+  }
+}
+function setProducts(){
+  let proStringObj=JSON.stringify(productsArray);
+  localStorage.setItem('products',proStringObj);
+}
+
 function generateRandomIndex() {
   return Math.floor(Math.random() * productsArray.length);
 }
@@ -124,7 +139,7 @@ function chartRendering() {
   });
 
 }
-
+getProducts();
 
 container.addEventListener('click', handleUserClick);
 
@@ -148,10 +163,13 @@ function handleUserClick(event) {
   if (userAttemptCounter <= maxAttempts) {
     if (event.target.id === 'leftImageElement') {
       productsArray[leftImageIndex].votes++;
+      setProducts();
     } else if (event.target.id === 'middleImageElement') {
       productsArray[middleImageIndex].votes++;
+      setProducts();
     } else {
       productsArray[rightImageIndex].votes++;
+      setProducts();
     }
     renderThreeImages();
   } else {
